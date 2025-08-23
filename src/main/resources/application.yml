@@ -1,0 +1,26 @@
+spring:
+  application:
+    name: trash-core
+  datasource:
+    url: jdbc:postgresql://localhost:5432/trash_core
+    username: budchirp
+    password: can
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+  messages:
+    basename: i18n/messages
+
+springdoc:
+  api-docs:
+    path: /docs
+  swagger-ui:
+    enabled: false
+
+scalar:
+  url: http://localhost:8080/docs
+
+app:
+  jwt:
+    secret: yImRb4CB0OtJcs74Lpzv9WcfoEFnqxVnyImRb4CB0OtJcs74Lpzv9WcfoEFnqxVnyImRb4CB0OtJcs74Lpzv9WcfoEFnqxVn

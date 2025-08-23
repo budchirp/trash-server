@@ -1,0 +1,63 @@
+package com.cankolay.trash.core.module.user.controller
+
+import com.cankolay.trash.core.common.model.ApiResponse
+import com.cankolay.trash.core.common.security.annotation.Authenticate
+import com.cankolay.trash.core.common.service.I18nService
+import com.cankolay.trash.core.common.util.SafeController
+import com.cankolay.trash.core.module.user.dto.request.CreateTokenRequestDto
+import com.cankolay.trash.core.module.user.dto.request.CreateUserRequestDto
+import com.cankolay.trash.core.module.user.dto.response.CreateTokenResponseDto
+import com.cankolay.trash.core.module.user.service.UserService
+import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.*
+
+@RestController
+@RequestMapping("/user")
+class UserController(
+    private val safeController: SafeController,
+    private val i18nService: I18nService,
+    private val userService: UserService,
+) {
+    @PostMapping("/")
+    fun create(@RequestBody body: CreateUserRequestDto): ResponseEntity<ApiResponse<Nothing>> =
+        safeController {
+            userService.create(name = body.name, username = body.username, password = body.password)
+
+            ResponseEntity.ok().body(
+                ApiResponse(
+                    message = i18nService.get("success"),
+                    code = "success"
+                )
+            )
+        }
+
+
+    @Authenticate
+    @PostMapping("/token")
+    fun createToken(@RequestBody body: CreateTokenRequestDto): ResponseEntity<ApiResponse<CreateTokenResponseDto>> =
+        safeController {
+            ResponseEntity.ok().body(
+                ApiResponse(
+                    message = i18nService.get("success"),
+                    code = "success",
+                    data = CreateTokenResponseDto(
+                        token = userService.createToken(password = body.password)
+                    )
+                )
+            )
+        }
+
+    @Authenticate
+    @DeleteMapping("/")
+    fun delete(@RequestParam("token") token: String): ResponseEntity<ApiResponse<Nothing>> =
+        safeController {
+            userService.delete(token = token)
+
+            ResponseEntity.ok().body(
+                ApiResponse(
+                    message = i18nService.get("success"),
+                    code = "success"
+                )
+            )
+        }
+}

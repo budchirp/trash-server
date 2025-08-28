@@ -7,6 +7,8 @@ import com.cankolay.trash.core.common.util.SafeController
 import com.cankolay.trash.core.module.user.dto.request.CreateTokenRequestDto
 import com.cankolay.trash.core.module.user.dto.request.CreateUserRequestDto
 import com.cankolay.trash.core.module.user.dto.response.CreateTokenResponseDto
+import com.cankolay.trash.core.module.user.dto.response.GetProfileResponseDto
+import com.cankolay.trash.core.module.user.entity.toDto
 import com.cankolay.trash.core.module.user.service.UserService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -18,6 +20,20 @@ class UserController(
     private val i18nService: I18nService,
     private val userService: UserService,
 ) {
+    @Authenticate
+    @GetMapping("/")
+    fun get(): ResponseEntity<ApiResponse<GetProfileResponseDto>> =
+        safeController {
+            ResponseEntity.ok().body(
+                ApiResponse(
+                    message = i18nService.get("success"),
+                    code = "success",
+                    data = userService.get().toDto()
+                )
+            )
+        }
+
+
     @PostMapping("/")
     fun create(@RequestBody body: CreateUserRequestDto): ResponseEntity<ApiResponse<Nothing>> =
         safeController {
@@ -33,8 +49,8 @@ class UserController(
 
 
     @Authenticate
-    @PostMapping("/token")
-    fun createToken(@RequestBody body: CreateTokenRequestDto): ResponseEntity<ApiResponse<CreateTokenResponseDto>> =
+    @PostMapping("/security/token")
+    fun createSecurityToken(@RequestBody body: CreateTokenRequestDto): ResponseEntity<ApiResponse<CreateTokenResponseDto>> =
         safeController {
             ResponseEntity.ok().body(
                 ApiResponse(

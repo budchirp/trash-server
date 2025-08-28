@@ -16,10 +16,11 @@ springdoc:
   api-docs:
     path: /docs
   swagger-ui:
-    enabled: false
+    enabled: true
 
 scalar:
   url: http://localhost:8080/docs
+  enabled: false
 
 app:
   jwt:

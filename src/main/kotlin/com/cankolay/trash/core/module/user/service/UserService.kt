@@ -20,19 +20,21 @@ class UserService(
     private val userRepository: UserRepository,
     private val profileRepository: ProfileRepository,
     private val sessionRepository: SessionRepository,
-    private val encryptor: Encryptor,
     private val authService: AuthService,
-    private val jwtService: JwtService
+    private val jwtService: JwtService,
+    private val encryptor: Encryptor
 ) {
+    fun get(): User {
+        return authService.getUser()
+    }
+
     @Transactional
     @Throws(UserExistsException::class)
     fun create(name: String, username: String, password: String): User {
         userRepository.findByUsername(username)?.let {
             throw UserExistsException()
         }
-
-        val encryptor = Encryptor()
-
+        
         val profile = profileService.create(name = name)
 
         return userRepository.save(

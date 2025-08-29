@@ -37,7 +37,7 @@ class UserController(
     @PostMapping("/")
     fun create(@RequestBody body: CreateUserRequestDto): ResponseEntity<ApiResponse<Nothing>> =
         safeController {
-            userService.create(name = body.name, username = body.username, password = body.password)
+            userService.create(email = body.email, username = body.username, password = body.password)
 
             ResponseEntity.ok().body(
                 ApiResponse(

@@ -12,7 +12,7 @@ data class Profile(
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0,
 
-    var name: String,
+    var name: String? = null,
     val picture: String? = null,
 
     @CreationTimestamp

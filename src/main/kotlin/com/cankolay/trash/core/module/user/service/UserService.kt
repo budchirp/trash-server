@@ -25,20 +25,23 @@ class UserService(
     private val encryptor: Encryptor
 ) {
     fun get(): User {
-        return authService.getUser()
+        val user = authService.getUser()
+        
+        return user.copy()
     }
 
     @Transactional
     @Throws(UserExistsException::class)
-    fun create(name: String, username: String, password: String): User {
+    fun create(email: String, username: String, password: String): User {
         userRepository.findByUsername(username)?.let {
             throw UserExistsException()
         }
-        
-        val profile = profileService.create(name = name)
+
+        val profile = profileService.create()
 
         return userRepository.save(
             User(
+                email = email,
                 username = username,
                 password = encryptor.encrypt(password),
                 profile = profile

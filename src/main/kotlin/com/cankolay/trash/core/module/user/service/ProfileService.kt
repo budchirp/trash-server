@@ -12,8 +12,8 @@ class ProfileService(
     private val authService: AuthService
 ) {
     @Transactional
-    fun create(name: String): Profile {
-        return profileRepository.save(Profile(name = name))
+    fun create(): Profile {
+        return profileRepository.save(Profile())
     }
 
     @Transactional

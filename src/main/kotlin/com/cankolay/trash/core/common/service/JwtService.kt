@@ -18,12 +18,13 @@ class JwtService(
     fun extract(token: String?): String? =
         if (token != null && token.startsWith(prefix = "Bearer ")) token.removePrefix(prefix = "Bearer ") else null
 
-    fun generate(id: String, token: String? = null): String {
+    fun generate(id: String, token: String? = null, duration: Int = 1000 * 60 * 60 * 24 * 30): String {
         return Jwts.builder()
             .subject("user")
-            .claim("id", id).claim("token", token)
+            .claim("id", id)
+            .claim("token", token)
             .issuedAt(Date())
-            .expiration(Date(System.currentTimeMillis() + 1000 * 60 * 15))
+            .expiration(Date(System.currentTimeMillis() + duration))
             .signWith(secretKey)
             .compact()
     }

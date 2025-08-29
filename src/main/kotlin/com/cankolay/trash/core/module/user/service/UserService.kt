@@ -56,7 +56,7 @@ class UserService(
             throw InvalidPasswordException()
         }
 
-        return jwtService.generate(id = user.id)
+        return jwtService.generate(id = user.id, duration = 1000 * 60 * 15)
     }
 
     @Transactional

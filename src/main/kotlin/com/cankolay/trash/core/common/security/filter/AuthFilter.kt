@@ -39,7 +39,7 @@ class AuthFilter(
             return
         }
 
-        val payload = jwtService.get(token)
+        val payload = jwtService.payload(token)
 
         SecurityContextHolder.getContext().authentication = UsernamePasswordAuthenticationToken(
             payload.id,

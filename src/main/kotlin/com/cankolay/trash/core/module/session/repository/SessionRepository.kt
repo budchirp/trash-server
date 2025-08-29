@@ -4,9 +4,9 @@ import com.cankolay.trash.core.module.session.entity.Session
 import org.springframework.data.jpa.repository.JpaRepository
 
 interface SessionRepository : JpaRepository<Session, String> {
-    fun existsByTokenAndUserId(token: String, user: Long): Boolean
-    fun deleteByTokenAndUserId(token: String, user: Long): Long
-    fun deleteAllByUserId(user: Long): Long
-    fun findAllByUserId(user: Long): List<Session>
-    fun findByTokenAndUserId(token: String, user: Long): Session?
+    fun existsByTokenAndUserId(token: String, user: String): Boolean
+    fun deleteByTokenAndUserId(token: String, user: String): Long
+    fun deleteAllByUserId(user: String): Long
+    fun findAllByUserId(user: String): List<Session>
+    fun findByTokenAndUserId(token: String, user: String): Session?
 }

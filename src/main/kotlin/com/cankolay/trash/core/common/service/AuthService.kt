@@ -12,22 +12,22 @@ class AuthService(
     private val userRepository: UserRepository,
 ) {
     @Throws(UnauthorizedException::class, UserNotFoundException::class)
-    fun getUser(): User {
+    fun get(): User {
         val auth = SecurityContextHolder.getContext().authentication
-        val id = auth?.principal as? Long ?: throw UnauthorizedException()
+        val id = auth?.principal as? String ?: throw UnauthorizedException()
 
         return userRepository.findById(id).orElseThrow { UserNotFoundException() }
     }
 
     @Throws(UnauthorizedException::class, UserNotFoundException::class)
-    fun checkUser() {
+    fun validate() {
         val auth = SecurityContextHolder.getContext().authentication
-        val id = auth?.principal as? Long ?: throw UnauthorizedException()
+        val id = auth?.principal as? String ?: throw UnauthorizedException()
 
         if (!userRepository.existsById(id)) throw UserNotFoundException()
     }
 
-    fun getSessionToken(): String {
+    fun token(): String {
         val auth = SecurityContextHolder.getContext().authentication
         return auth?.credentials as? String ?: throw UnauthorizedException()
     }

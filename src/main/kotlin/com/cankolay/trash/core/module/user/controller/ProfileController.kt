@@ -20,7 +20,7 @@ class ProfileController(
     private val profileService: ProfileService
 ) {
     @Authenticate
-    @PatchMapping("/")
+    @PatchMapping
     fun update(@RequestBody body: UpdateProfileRequestDto): ResponseEntity<ApiResponse<Nothing>> =
         safeController {
             profileService.update(name = body.name)

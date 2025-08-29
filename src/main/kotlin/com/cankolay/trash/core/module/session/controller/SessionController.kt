@@ -25,7 +25,7 @@ class SessionController(
     private val requestInfoService: RequestInfoService,
     private val userAgentParser: UserAgentParser
 ) {
-    @PostMapping("/")
+    @PostMapping
     fun create(
         request: HttpServletRequest,
         @RequestBody body: CreateSessionRequestDto
@@ -51,7 +51,7 @@ class SessionController(
         }
 
     @Authenticate
-    @DeleteMapping("/")
+    @DeleteMapping
     fun delete(): ResponseEntity<ApiResponse<Nothing>> =
         safeController {
             sessionService.delete()
@@ -79,7 +79,7 @@ class SessionController(
         }
 
     @Authenticate
-    @GetMapping("/")
+    @GetMapping
     fun getAll(): ResponseEntity<ApiResponse<GetAllSessionsResponse>> =
         safeController {
             ResponseEntity.ok().body(

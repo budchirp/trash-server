@@ -21,7 +21,7 @@ class UserController(
     private val userService: UserService,
 ) {
     @Authenticate
-    @GetMapping("/")
+    @GetMapping
     fun get(): ResponseEntity<ApiResponse<GetProfileResponseDto>> =
         safeController {
             ResponseEntity.ok().body(
@@ -34,7 +34,7 @@ class UserController(
         }
 
 
-    @PostMapping("/")
+    @PostMapping
     fun create(@RequestBody body: CreateUserRequestDto): ResponseEntity<ApiResponse<Nothing>> =
         safeController {
             userService.create(email = body.email, username = body.username, password = body.password)
@@ -47,6 +47,20 @@ class UserController(
             )
         }
 
+    
+    @Authenticate
+    @DeleteMapping
+    fun delete(@RequestParam("token") token: String): ResponseEntity<ApiResponse<Nothing>> =
+        safeController {
+            userService.delete(token = token)
+
+            ResponseEntity.ok().body(
+                ApiResponse(
+                    message = i18nService.get("success"),
+                    code = "success"
+                )
+            )
+        }
 
     @Authenticate
     @PostMapping("/security/token")
@@ -59,20 +73,6 @@ class UserController(
                     data = CreateTokenResponseDto(
                         token = userService.createToken(password = body.password)
                     )
-                )
-            )
-        }
-
-    @Authenticate
-    @DeleteMapping("/")
-    fun delete(@RequestParam("token") token: String): ResponseEntity<ApiResponse<Nothing>> =
-        safeController {
-            userService.delete(token = token)
-
-            ResponseEntity.ok().body(
-                ApiResponse(
-                    message = i18nService.get("success"),
-                    code = "success"
                 )
             )
         }

@@ -10,12 +10,12 @@ import java.util.*
 @Entity
 @Table(name = "users")
 data class User(
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long = 0,
+    @Id
+    val id: String = UUID.randomUUID().toString(),
 
     val email: String,
     var username: String,
-    
+
     val password: String,
 
     val verified: Boolean = false,
@@ -39,6 +39,8 @@ data class User(
 )
 
 fun User.toDto() = UserDto(
+    id = this.id,
+    email = this.email,
     username = this.username,
     profile = this.profile.toDto()
 )

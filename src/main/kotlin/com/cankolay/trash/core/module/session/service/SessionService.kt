@@ -54,8 +54,8 @@ class SessionService(
     @Transactional
     @Throws(UserNotFoundException::class, UnauthorizedException::class)
     fun delete() {
-        val user = authService.getUser()
-        val token = authService.getSessionToken()
+        val user = authService.get()
+        val token = authService.token()
 
         sessionRepository.deleteByTokenAndUserId(token = token, user = user.id)
     }
@@ -63,7 +63,7 @@ class SessionService(
     @Transactional
     @Throws(UserNotFoundException::class, UnauthorizedException::class)
     fun delete(token: String) {
-        val user = authService.getUser()
+        val user = authService.get()
 
         if (!exists(user = user.id, token = token)) {
             throw UnauthorizedException()
@@ -74,23 +74,23 @@ class SessionService(
 
     @Throws(UserNotFoundException::class, UnauthorizedException::class)
     fun getAll(): List<Session> {
-        val user = authService.getUser()
+        val user = authService.get()
 
         return sessionRepository.findAllByUserId(user = user.id)
     }
 
     @Throws(SessionNotFoundException::class, UserNotFoundException::class, UnauthorizedException::class)
     fun get(token: String): Session {
-        val user = authService.getUser()
+        val user = authService.get()
 
         return sessionRepository.findByTokenAndUserId(token = token, user = user.id) ?: throw SessionNotFoundException()
     }
 
-    fun exists(user: Long, token: String): Boolean =
+    fun exists(user: String, token: String): Boolean =
         sessionRepository.existsByTokenAndUserId(token = token, user = user)
 
     @Throws(UnauthorizedException::class, UserNotFoundException::class)
     fun verify() {
-        authService.checkUser()
+        authService.validate()
     }
 }

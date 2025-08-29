@@ -7,40 +7,24 @@ import io.jsonwebtoken.security.Keys
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import java.util.*
-import javax.crypto.SecretKey
 
 @Service
 class JwtService(
     @Value("\${app.jwt.secret}")
     private val secret: String
 ) {
-    private fun getKey(): SecretKey? {
-        return Keys.hmacShaKeyFor(Decoders.BASE64.decode(secret))
-    }
+    private val secretKey = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secret))
 
     fun extract(token: String?): String? =
         if (token != null && token.startsWith(prefix = "Bearer ")) token.removePrefix(prefix = "Bearer ") else null
 
-    fun generate(id: Long, token: String): String {
-        val key = getKey()
-
+    fun generate(id: String, token: String? = null): String {
         return Jwts.builder()
             .subject("user")
-            .claim("id", id.toString()).claim("token", token)
+            .claim("id", id).claim("token", token)
             .issuedAt(Date())
             .expiration(Date(System.currentTimeMillis() + 1000 * 60 * 15))
-            .signWith(key)
-            .compact()
-    }
-
-    fun generate(id: Long): String {
-        val key = getKey()
-
-        return Jwts.builder()
-            .subject("verification").claim("id", id.toString())
-            .issuedAt(Date())
-            .expiration(Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10))
-            .signWith(key)
+            .signWith(secretKey)
             .compact()
     }
 
@@ -48,8 +32,7 @@ class JwtService(
         if (jwt == null) return false
 
         return try {
-            val key = getKey()
-            Jwts.parser().verifyWith(key).build().parseSignedClaims(jwt)
+            Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(jwt)
 
             true
         } catch (_: Exception) {
@@ -57,20 +40,18 @@ class JwtService(
         }
     }
 
-    fun get(jwt: String): JWTPayload {
-        val key = getKey()
-        val payload = Jwts.parser().verifyWith(key).build().parseSignedClaims(jwt).payload
+    fun payload(jwt: String): JWTPayload {
+        val payload = Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(jwt).payload
 
         return JWTPayload(
-            id = payload["id"].toString().toLong(),
+            id = payload["id"].toString(),
             token = payload["token"].toString()
         )
     }
 
-    fun getId(jwt: String): Long {
-        val key = getKey()
-        val payload = Jwts.parser().verifyWith(key).build().parseSignedClaims(jwt).payload
+    fun id(jwt: String): String {
+        val payload = Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(jwt).payload
 
-        return payload["id"].toString().toLong()
+        return payload["id"].toString()
     }
 }

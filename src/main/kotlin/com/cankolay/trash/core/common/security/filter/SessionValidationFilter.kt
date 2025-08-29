@@ -4,6 +4,7 @@ import com.cankolay.trash.core.module.session.service.SessionService
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
+import org.springframework.security.authentication.AnonymousAuthenticationToken
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Component
 import org.springframework.web.filter.OncePerRequestFilter
@@ -16,7 +17,12 @@ class SessionValidationFilter(private val sessionService: SessionService) : Once
         filterChain: FilterChain
     ) {
         val auth = SecurityContextHolder.getContext().authentication
-        val id = auth?.principal as? Long
+        if (auth is AnonymousAuthenticationToken) {
+            filterChain.doFilter(request, response)
+            return
+        }
+        
+        val id = auth?.principal as? String
         val token = auth?.credentials as? String
 
         if (id != null && token != null) {

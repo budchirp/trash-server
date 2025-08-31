@@ -25,7 +25,7 @@ class UserService(
     private val encryptor: Encryptor
 ) {
     fun get(): User {
-        val user = authService.get()
+        val user = authService.user()
         return user.copy()
     }
 
@@ -50,7 +50,7 @@ class UserService(
 
     @Throws(InvalidPasswordException::class)
     fun createToken(password: String): String {
-        val user = authService.get()
+        val user = authService.user()
 
         if (!encryptor.check(password = password, encrypted = user.password)) {
             throw InvalidPasswordException()
@@ -62,7 +62,7 @@ class UserService(
     @Transactional
     @Throws(InvalidVerificationTokenException::class, UnauthorizedException::class)
     fun delete(token: String) {
-        val user = authService.get()
+        val user = authService.user()
 
         if (!jwtService.verify(jwt = token)) {
             throw InvalidVerificationTokenException()

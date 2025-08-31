@@ -18,7 +18,7 @@ class ProfileService(
 
     @Transactional
     fun update(name: String?) {
-        val user = authService.get()
+        val user = authService.user()
 
         user.profile.name = name ?: user.profile.name
         profileRepository.save(user.profile)

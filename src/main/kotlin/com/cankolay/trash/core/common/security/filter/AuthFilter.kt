@@ -31,11 +31,14 @@ class AuthFilter(
         response: HttpServletResponse,
         filterChain: FilterChain
     ) {
-        val header = request.getHeader("Authorization")
-        val token = jwtService.extract(header)
+        val token = jwtService.extract(token = request.getHeader("Authorization"))
+        if (token == null) {
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Missing JWT")
+            return
+        }
 
-        if (token == null || !jwtService.verify(token)) {
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Missing or invalid JWT")
+        if (!jwtService.verify(jwt = token)) {
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid JWT")
             return
         }
 

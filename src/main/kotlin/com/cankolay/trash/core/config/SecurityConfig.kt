@@ -20,7 +20,7 @@ class SecurityConfig(
 ) {
     @Bean
     fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
-        http.csrf().disable()
+        http.csrf().disable().cors().and()
             .authorizeHttpRequests { it.anyRequest().permitAll() }
             .addFilterBefore(
                 SessionValidationFilter(sessionService = sessionService),
@@ -35,7 +35,11 @@ class SecurityConfig(
     fun corsConfigurer(): WebMvcConfigurer {
         return object : WebMvcConfigurer {
             override fun addCorsMappings(registry: CorsRegistry) {
-                registry.addMapping("/**").allowedOrigins("*")
+                registry.addMapping("/**")
+                    .allowedOriginPatterns("*")
+                    .allowedMethods("*")
+                    .allowedHeaders("*")
+                    .allowCredentials(true)
             }
         }
     }

@@ -12,19 +12,11 @@ class AuthService(
     private val userRepository: UserRepository,
 ) {
     @Throws(UnauthorizedException::class, UserNotFoundException::class)
-    fun get(): User {
+    fun user(): User {
         val auth = SecurityContextHolder.getContext().authentication
         val id = auth?.principal as? String ?: throw UnauthorizedException()
 
         return userRepository.findById(id).orElseThrow { UserNotFoundException() }
-    }
-
-    @Throws(UnauthorizedException::class, UserNotFoundException::class)
-    fun validate() {
-        val auth = SecurityContextHolder.getContext().authentication
-        val id = auth?.principal as? String ?: throw UnauthorizedException()
-
-        if (!userRepository.existsById(id)) throw UserNotFoundException()
     }
 
     fun token(): String {

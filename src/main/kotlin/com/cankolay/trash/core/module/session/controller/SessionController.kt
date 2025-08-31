@@ -108,8 +108,6 @@ class SessionController(
     @GetMapping("/verify")
     fun verify(): ResponseEntity<ApiResponse<Nothing>> =
         safeController {
-            sessionService.verify()
-
             ResponseEntity.ok().body(
                 ApiResponse(
                     message = i18nService.get("success"),

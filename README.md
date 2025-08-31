@@ -1,6 +1,6 @@
 <div align="center">
     <h1>trash-server</h1>
-    <h2>Trash Core: Spring boot backend for Trash services</h2>
+    <h2>Trash Server: Spring boot backend for Trash services</h2>
 </div>
 
 <div align="center">

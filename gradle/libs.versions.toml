@@ -1,0 +1,54 @@
+[versions]
+lombok = "1.18.42"
+
+spring-boot = "4.0.1"
+spring-dependency = "1.1.7"
+
+springdoc = "2.2.0"
+scalar = "0.1.0"
+
+flyway = "11.20.0"
+postgresql = "42.7.8"
+
+jackson = "3.0.3"
+
+bouncycastle = "1.83"
+jjwt = "0.13.0"
+
+yauaa = "7.31.0"
+
+[plugins]
+spring-boot = { id = "org.springframework.boot", version.ref = "spring-boot" }
+spring-dependency = { id = "io.spring.dependency-management", version.ref = "spring-dependency" }
+
+[libraries]
+lombok = { module = "org.projectlombok:lombok", version.ref = "lombok" }
+
+spring-boot-actuator = { module = "org.springframework.boot:spring-boot-starter-actuator", version.ref = "spring-boot" }
+spring-boot-data-jpa = { module = "org.springframework.boot:spring-boot-starter-data-jpa", version.ref = "spring-boot" }
+spring-boot-security = { module = "org.springframework.boot:spring-boot-starter-security", version.ref = "spring-boot" }
+spring-boot-web = { module = "org.springframework.boot:spring-boot-starter-web", version.ref = "spring-boot" }
+
+spring-boot-devtools = { module = "org.springframework.boot:spring-boot-devtools", version.ref = "spring-boot" }
+
+spring-doc = { module = "org.springdoc:springdoc-openapi-starter-webmvc-ui", version.ref = "springdoc" }
+scalar = { module = "com.scalar.maven:scalar", version.ref = "scalar" }
+
+flyway-core = { module = "org.flywaydb:flyway-core", version.ref = "flyway" }
+flyway-postgresql = { module = "org.flywaydb:flyway-database-postgresql", version.ref = "flyway" }
+
+postgresql = { module = "org.postgresql:postgresql", version.ref = "postgresql" }
+
+bouncycastle = { module = "org.bouncycastle:bcprov-jdk18on", version.ref = "bouncycastle" }
+jackson = { module = "tools.jackson.module:jackson-module-kotlin", version.ref = "jackson" }
+
+jjwt-api = { module = "io.jsonwebtoken:jjwt-api", version.ref = "jjwt" }
+jjwt-impl = { module = "io.jsonwebtoken:jjwt-impl", version.ref = "jjwt" }
+jjwt-jackson = { module = "io.jsonwebtoken:jjwt-jackson", version.ref = "jjwt" }
+
+yauaa = { module = "nl.basjes.parse.useragent:yauaa", version.ref = "yauaa" }
+
+[bundles]
+spring-boot = ["spring-boot-actuator", "spring-boot-data-jpa", "spring-boot-security", "spring-boot-web"]
+jjwt = ["jjwt-impl", "jjwt-jackson"]
+flyway = ["flyway-core", "flyway-postgresql"]

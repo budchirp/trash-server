@@ -2,8 +2,8 @@ spring:
   application:
     name: trash-core
   datasource:
-    url: jdbc:postgresql://localhost:5432/trash_core
-    username: budchirp
+    url: jdbc:postgresql://localhost:5432/trash
+    username: postgres
     password: can
   jpa:
     hibernate:

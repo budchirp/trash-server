@@ -9,7 +9,8 @@ import java.util.*
 
 enum class TokenType {
     SESSION,
-    CONNECTION
+    CONNECTION,
+    SECURITY
 }
 
 @Entity
@@ -21,6 +22,9 @@ class Token(
     @Enumerated(value = EnumType.STRING)
     @Column(nullable = false)
     val type: TokenType = TokenType.SESSION,
+
+    @Column(name = "owner_id", length = 36)
+    val ownerId: String? = null,
 
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(
@@ -43,7 +47,7 @@ class Token(
 ) {
     fun grant(permissionKeys: Set<String>) {
         permissions.clear()
-        permissions.addAll(permissionKeys)
+        permissions.addAll(elements = permissionKeys)
         expiresAt = defaultExpiresAt()
     }
 

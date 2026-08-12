@@ -11,6 +11,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
+import org.springframework.security.web.header.writers.ReferrerPolicyHeaderWriter
 
 @Configuration
 class SecurityConfig(
@@ -22,7 +23,16 @@ class SecurityConfig(
     fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
         http.cors { }
         http.csrf { it.disable() }
+
         http.sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
+
+        http.headers {
+            it.frameOptions { frameOptions -> frameOptions.deny() }
+            it.referrerPolicy { referrerPolicy ->
+                referrerPolicy.policy(ReferrerPolicyHeaderWriter.ReferrerPolicy.NO_REFERRER)
+            }
+        }
+
         http.exceptionHandling {
             it.authenticationEntryPoint(authenticationEntryPoint)
             it.accessDeniedHandler(accessDeniedHandler)

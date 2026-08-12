@@ -16,7 +16,7 @@ class ApplicationService(
 ) {
     @Transactional
     fun create(name: String, description: String, icon: String): Application {
-        auth.requireSession()
+        auth.validateSession()
 
         return applicationRepository.save(
             Application(
@@ -30,7 +30,7 @@ class ApplicationService(
 
     @Transactional(readOnly = true)
     fun getAll(): List<Application> {
-        auth.requireSession()
+        auth.validateSession()
 
         return applicationRepository.findAllByOwnerId(ownerId = auth.id())
     }
@@ -46,7 +46,7 @@ class ApplicationService(
 
     @Transactional
     fun delete(id: String) {
-        auth.requireSession()
+        auth.validateSession()
 
         val application = getOwned(id = id)
         connectionRepository.deleteAll(connectionRepository.findAllByApplicationId(applicationId = id))

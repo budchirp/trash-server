@@ -8,6 +8,7 @@ import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.security.Keys
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
+import java.nio.charset.StandardCharsets
 import java.time.Duration
 import java.time.Instant
 import java.util.*
@@ -15,12 +16,21 @@ import java.util.*
 @Service
 class JwtService(
     @param:Value("\${app.jwt.secret}")
-    private val secret: String
+    private val secret: String,
+    @param:Value("\${app.jwt.issuer}")
+    private val issuer: String,
+    @param:Value("\${app.jwt.audience}")
+    private val audience: String
 ) {
-    private val key by lazy { Keys.hmacShaKeyFor(secret.toByteArray()) }
+    private val key = Keys.hmacShaKeyFor(secret.toByteArray(StandardCharsets.UTF_8))
 
-    fun extract(jwt: String?): String? =
-        if (jwt != null && jwt.startsWith(prefix = "Bearer ")) jwt.removePrefix(prefix = "Bearer ") else null
+    fun extract(jwt: String?): String? {
+        val parts = jwt?.trim()?.split(Regex("\\s+"), limit = 2) ?: return null
+        return parts
+            .takeIf { it.size == 2 && it[0].equals("Bearer", ignoreCase = true) }
+            ?.get(index = 1)
+            ?.takeIf(String::isNotBlank)
+    }
 
     fun generateAccessToken(
         userId: String,
@@ -33,18 +43,25 @@ class JwtService(
         duration = duration
     )
 
-    fun generateSecurityVerificationToken(
+    fun generateSecurityToken(
         userId: String,
+        token: Token,
         duration: Duration = Duration.ofMinutes(15)
     ): String = generate(
         userId = userId,
-        token = null,
-        purpose = JwtPurpose.SECURITY_VERIFICATION,
+        token = token,
+        purpose = JwtPurpose.SECURITY,
         duration = duration
     )
 
     fun parse(jwt: String): JWTPayload? = runCatching {
-        val claims = Jwts.parser().verifyWith(key).build().parseSignedClaims(jwt).payload
+        val claims = Jwts.parser()
+            .verifyWith(key)
+            .requireIssuer(issuer)
+            .requireAudience(audience)
+            .build()
+            .parseSignedClaims(jwt)
+            .payload
 
         JWTPayload(
             user = claims[USER_CLAIM]?.toString().orEmpty(),
@@ -58,12 +75,16 @@ class JwtService(
         userId: String,
         token: Token?,
         purpose: JwtPurpose,
-        duration: Duration
+        duration: Duration,
+        issuedAt: Instant = Instant.now()
     ): String {
-        val now = Instant.now()
         val builder = Jwts.builder()
             .claim(USER_CLAIM, userId)
             .claim(PURPOSE_CLAIM, purpose.name)
+            .issuer(issuer)
+            .audience()
+            .add(audience)
+            .and()
 
         if (token != null) {
             builder
@@ -72,8 +93,8 @@ class JwtService(
         }
 
         return builder
-            .issuedAt(Date.from(now))
-            .expiration(Date.from(now.plus(duration)))
+            .issuedAt(Date.from(issuedAt))
+            .expiration(Date.from(issuedAt.plus(duration)))
             .signWith(key)
             .compact()
     }

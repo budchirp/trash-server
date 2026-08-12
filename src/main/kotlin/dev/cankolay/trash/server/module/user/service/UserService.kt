@@ -1,5 +1,7 @@
 package dev.cankolay.trash.server.module.user.service
 
+import dev.cankolay.trash.server.common.exception.RateLimitedException
+import dev.cankolay.trash.server.common.service.RateLimiter
 import dev.cankolay.trash.server.common.util.Encryptor
 import dev.cankolay.trash.server.module.application.repository.ApplicationRepository
 import dev.cankolay.trash.server.module.auth.service.AuthService
@@ -9,10 +11,10 @@ import dev.cankolay.trash.server.module.session.repository.SessionRepository
 import dev.cankolay.trash.server.module.user.entity.Profile
 import dev.cankolay.trash.server.module.user.entity.User
 import dev.cankolay.trash.server.module.user.exception.UserExistsException
-import dev.cankolay.trash.server.module.user.exception.UserNotFoundException
 import dev.cankolay.trash.server.module.user.repository.UserRepository
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.util.*
 
 @Service
 class UserService(
@@ -22,10 +24,15 @@ class UserService(
     private val applicationRepository: ApplicationRepository,
     private val auth: AuthService,
     private val encryptor: Encryptor,
-    private val securityTokenService: SecurityTokenService
+    private val securityTokenService: SecurityTokenService,
+    private val rateLimiter: RateLimiter
 ) {
     @Transactional
-    fun create(email: String, username: String, password: String): User {
+    fun create(email: String, username: String, password: String, ip: String = "unknown"): User {
+        if (!rateLimiter.check(key = "registration:$ip:${email.trim().lowercase(Locale.ROOT)}")) {
+            throw RateLimitedException()
+        }
+
         if (userRepository.existsByEmailOrUsername(email = email, username = username)) {
             throw UserExistsException()
         }
@@ -41,14 +48,12 @@ class UserService(
     }
 
     @Transactional(readOnly = true)
-    fun get(id: String): User = userRepository.findById(id).orElseThrow { UserNotFoundException() }
-
-    @Transactional(readOnly = true)
     fun get(): User = auth.user()
 
     @Transactional
     fun delete(securityToken: String) {
-        securityTokenService.verify(jwt = securityToken)
+        auth.validateSession()
+        securityTokenService.consume(jwt = securityToken)
 
         val user = auth.user()
         sessionRepository.deleteAll(sessionRepository.findAllByUserId(user.id))

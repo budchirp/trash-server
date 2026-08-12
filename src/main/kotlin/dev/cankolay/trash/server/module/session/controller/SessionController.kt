@@ -27,8 +27,8 @@ class SessionController(
         request: HttpServletRequest,
         @Valid @RequestBody body: CreateSessionRequestDto
     ): ResponseEntity<ApiResponse<CreateSessionResponseDto>> {
-        val userAgent = requestInfoService.getUserAgent(request)
-        val ip = requestInfoService.getClientIp(request)
+        val userAgent = requestInfoService.getUserAgent(request = request)
+        val ip = requestInfoService.getClientIp(request = request)
 
         return responses.ok(
             data = CreateSessionResponseDto(

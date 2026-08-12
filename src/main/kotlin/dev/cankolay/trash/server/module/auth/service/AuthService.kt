@@ -36,7 +36,7 @@ class AuthService(
         val token = runCatching { tokenService.get(id = tokenId) }.getOrNull() ?: return null
         if (token.type != type || token.expiresAt.isBefore(Instant.now())) return null
 
-        if (!tokenBelongsToUser(tokenId = tokenId, userId = payload.user, type = type)) return null
+        if (!isTokenBelogsToUser(tokenId = tokenId, userId = payload.user, type = type)) return null
 
         return AuthPrincipal(
             user = payload.user,
@@ -60,13 +60,13 @@ class AuthService(
     @Transactional(readOnly = true)
     fun token(): Token = tokenService.get(id = principal().token)
 
-    fun requireSession() {
+    fun validateSession() {
         if (principal().type != TokenType.SESSION) {
             throw InsufficientPermissionsException()
         }
     }
 
-    private fun tokenBelongsToUser(tokenId: String, userId: String, type: TokenType): Boolean =
+    private fun isTokenBelogsToUser(tokenId: String, userId: String, type: TokenType): Boolean =
         when (type) {
             TokenType.SESSION -> sessionRepository.findByTokenIdAndUserId(
                 tokenId = tokenId,
@@ -77,6 +77,8 @@ class AuthService(
                 tokenId = tokenId,
                 userId = userId
             ) != null
+
+            TokenType.SECURITY -> false
         }
 
     private fun expandPermissions(permissions: Set<String>): Set<String> =

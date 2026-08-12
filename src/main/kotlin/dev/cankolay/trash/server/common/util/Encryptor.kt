@@ -12,8 +12,12 @@ class Encryptor {
         65536,
         4
     )
-
     fun encrypt(password: String): String = requireNotNull(encoder.encode(password))
 
-    fun check(password: String, encrypted: String): Boolean = encoder.matches(password, encrypted)
+    fun check(password: String, encrypted: String?): Boolean =
+        encoder.matches(password, encrypted ?: requireNotNull(encoder.encode(DUMMY_PASSWORD)))
+
+    private companion object {
+        const val DUMMY_PASSWORD = "trash-server-invalid-user-password"
+    }
 }

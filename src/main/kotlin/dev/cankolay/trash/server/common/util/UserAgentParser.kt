@@ -17,7 +17,7 @@ class UserAgentParser {
 
     operator fun invoke(userAgent: String) = userAgentAnalyzer.parse(userAgent).let {
         UserAgent(
-            device = it.getValue("DeviceName"),
+            device = it.getValue("DeviceName") ?: "Unknown",
             platform = when (it.getValue("DeviceClass")) {
                 "Desktop" -> UserAgentPlatform.DESKTOP
                 "Phone", "Console" -> UserAgentPlatform.MOBILE
@@ -25,8 +25,8 @@ class UserAgentParser {
                 else -> UserAgentPlatform.DESKTOP
             },
 
-            os = it.getValue("OperatingSystemNameVersion"),
-            browser = it.getValue("AgentNameVersion"),
+            os = it.getValue("OperatingSystemNameVersion") ?: "Unknown",
+            browser = it.getValue("AgentNameVersion") ?: "Unknown",
         )
     }
 }

@@ -4,7 +4,7 @@ import dev.cankolay.trash.server.module.auth.entity.TokenType
 
 enum class JwtPurpose {
     ACCESS,
-    SECURITY_VERIFICATION
+    SECURITY
 }
 
 data class JWTPayload(

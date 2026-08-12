@@ -19,16 +19,16 @@ class Session(
     @JoinColumn(name = "token_id", nullable = false, unique = true)
     val token: Token,
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 64)
     val ip: String,
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 255)
     val device: String,
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 255)
     val os: String,
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 255)
     val browser: String,
 
     @Enumerated(value = EnumType.STRING)

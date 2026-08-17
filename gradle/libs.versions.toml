@@ -15,6 +15,7 @@ bouncycastle = "1.83"
 jjwt = "0.13.0"
 
 yauaa = "7.31.0"
+aws-sdk = "2.30.34"
 
 [plugins]
 spring-boot = { id = "org.springframework.boot", version.ref = "spring-boot" }
@@ -42,6 +43,8 @@ jjwt-impl = { module = "io.jsonwebtoken:jjwt-impl", version.ref = "jjwt" }
 jjwt-jackson = { module = "io.jsonwebtoken:jjwt-jackson", version.ref = "jjwt" }
 
 yauaa = { module = "nl.basjes.parse.useragent:yauaa", version.ref = "yauaa" }
+
+aws-s3 = { module = "software.amazon.awssdk:s3", version.ref = "aws-sdk" }
 
 [bundles]
 spring-boot = ["spring-boot-actuator", "spring-boot-data-jpa", "spring-boot-security", "spring-boot-validation", "spring-boot-web"]

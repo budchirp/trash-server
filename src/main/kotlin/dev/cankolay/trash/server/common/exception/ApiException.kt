@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus
 open class ApiException(
     val status: HttpStatus = HttpStatus.BAD_REQUEST,
     val code: String,
-    override val message: String
+    override val message: String,
+    cause: Throwable? = null
 ) :
-    RuntimeException(message)
+    RuntimeException(message, cause)

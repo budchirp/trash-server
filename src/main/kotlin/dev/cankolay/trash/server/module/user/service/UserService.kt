@@ -11,6 +11,7 @@ import dev.cankolay.trash.server.module.session.repository.SessionRepository
 import dev.cankolay.trash.server.module.user.entity.Profile
 import dev.cankolay.trash.server.module.user.entity.User
 import dev.cankolay.trash.server.module.user.exception.UserExistsException
+import dev.cankolay.trash.server.module.user.exception.UserNotFoundException
 import dev.cankolay.trash.server.module.user.repository.UserRepository
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -25,7 +26,8 @@ class UserService(
     private val auth: AuthService,
     private val encryptor: Encryptor,
     private val securityTokenService: SecurityTokenService,
-    private val rateLimiter: RateLimiter
+    private val rateLimiter: RateLimiter,
+    private val profilePictureService: ProfilePictureService
 ) {
     @Transactional
     fun create(email: String, username: String, password: String, ip: String = "unknown"): User {
@@ -50,6 +52,13 @@ class UserService(
     @Transactional(readOnly = true)
     fun get(): User = auth.user()
 
+    @Transactional(readOnly = true)
+    fun getByUsername(username: String): User {
+        val cleanUsername = username.removePrefix("@")
+        return userRepository.findByUsername(username = cleanUsername)
+            ?: userRepository.findById(username).orElseThrow { UserNotFoundException() }
+    }
+
     @Transactional
     fun delete(securityToken: String) {
         auth.validateSession()
@@ -64,6 +73,8 @@ class UserService(
         connectionRepository.flush()
 
         applicationRepository.deleteAllByOwnerId(ownerId = user.id)
+
+        profilePictureService.delete()
 
         userRepository.delete(user)
     }

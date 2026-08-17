@@ -54,9 +54,11 @@ class SecurityConfig(
                 "/scalar/**"
             ).permitAll()
 
-            it.requestMatchers(HttpMethod.GET, "/user").hasAuthority(PermissionKeys.USER_READ)
+            it.requestMatchers(HttpMethod.GET, "/user", "/user/*").hasAuthority(PermissionKeys.USER_READ)
             it.requestMatchers(HttpMethod.DELETE, "/user").hasAuthority(PermissionKeys.USER_DELETE)
             it.requestMatchers(HttpMethod.PATCH, "/user/profile").hasAuthority(PermissionKeys.PROFILE_UPDATE)
+            it.requestMatchers(HttpMethod.POST, "/user/profile/picture").hasAuthority(PermissionKeys.PROFILE_UPDATE)
+            it.requestMatchers(HttpMethod.DELETE, "/user/profile/picture").hasAuthority(PermissionKeys.PROFILE_UPDATE)
 
             it.requestMatchers(HttpMethod.GET, "/session", "/session/*", "/session/all")
                 .hasAuthority(PermissionKeys.SESSION_READ)

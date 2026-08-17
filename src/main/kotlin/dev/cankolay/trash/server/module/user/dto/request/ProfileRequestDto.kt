@@ -7,9 +7,8 @@ data class ProfileRequestDto(
     @field:Size(max = 100)
     val name: String?,
 
-    @field:Size(max = 2048)
-    val picture: String?,
-
     @field:Pattern(regexp = "male|female", flags = [Pattern.Flag.CASE_INSENSITIVE])
-    val gender: String?
+    val gender: String? = null,
+
+    val `public`: Boolean? = null
 )

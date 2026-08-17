@@ -23,7 +23,7 @@ springdoc:
   api-docs:
     path: /openapi.json
   swagger-ui:
-    enabled: ${SWAGGER_ENABLED:true}
+    enabled: true
     path: /swagger
 
 scalar:
@@ -36,3 +36,11 @@ app:
     secret: ${JWT_SECRET:change-this-development-secret-change-this-development-secret-change-this-development-secret}
     issuer: ${JWT_ISSUER:trash-server}
     audience: ${JWT_AUDIENCE:trash-api}
+
+storage:
+  s3:
+    access-key-id: ${AWS_ACCESS_KEY_ID:}
+    secret-access-key: ${AWS_SECRET_ACCESS_KEY:}
+    bucket: ${S3_BUCKET:trash-storage}
+    region: ${S3_REGION:us-east-1}
+    endpoint: ${S3_ENDPOINT:}

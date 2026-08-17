@@ -12,16 +12,20 @@ class Profile(
     @Column(length = 100)
     var name: String? = null,
 
-    @Column(length = 2048)
-    var picture: String? = null,
+    @OneToOne(fetch = FetchType.EAGER, cascade = [CascadeType.ALL], orphanRemoval = true)
+    @JoinColumn(name = "picture_id")
+    var picture: Picture? = null,
 
     @Enumerated(EnumType.STRING)
     var gender: ProfileGender? = null,
+
+    @Column(nullable = false)
+    var `public`: Boolean = false,
 )
 
 enum class ProfileGender(val value: String) {
-    MALE("male"),
-    FEMALE("female");
+    MALE(value = "male"),
+    FEMALE(value = "female");
 
     companion object {
         fun fromValue(value: String): ProfileGender? =

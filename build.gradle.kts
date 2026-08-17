@@ -39,7 +39,16 @@ dependencies {
 
     implementation(libs.yauaa)
 
+    implementation(libs.aws.s3)
+
     developmentOnly(libs.spring.boot.devtools)
+
+    testImplementation(kotlin("test"))
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
+}
+
+tasks.withType<Test> {
+    useJUnitPlatform()
 }
 
 allOpen {

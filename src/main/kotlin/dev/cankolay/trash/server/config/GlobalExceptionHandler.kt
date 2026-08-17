@@ -23,6 +23,10 @@ class GlobalExceptionHandler(private val i18nService: I18nService) {
 
     @ExceptionHandler(ApiException::class)
     fun handleApiException(exception: ApiException): ResponseEntity<ApiResponse<Nothing>> {
+        if (exception.status.is5xxServerError) {
+            logger.error("API error [${exception.code}]: ${exception.message}", exception)
+        }
+
         return ResponseEntity
             .status(exception.status)
             .body(

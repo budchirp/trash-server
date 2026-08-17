@@ -4,9 +4,11 @@ import dev.cankolay.trash.server.common.model.ApiResponse
 import dev.cankolay.trash.server.common.service.RequestInfoService
 import dev.cankolay.trash.server.common.web.ApiResponseFactory
 import dev.cankolay.trash.server.module.user.dto.UserDto
+import dev.cankolay.trash.server.module.user.dto.UserProfileDto
 import dev.cankolay.trash.server.module.user.dto.request.CreateUserRequestDto
 import dev.cankolay.trash.server.module.user.dto.request.DeleteUserRequestDto
 import dev.cankolay.trash.server.module.user.mapper.toDto
+import dev.cankolay.trash.server.module.user.mapper.toProfileDto
 import dev.cankolay.trash.server.module.user.service.UserService
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.validation.Valid
@@ -37,6 +39,10 @@ class UserController(
     @GetMapping
     fun get(): ResponseEntity<ApiResponse<UserDto>> =
         responses.ok(data = userService.get().toDto())
+
+    @GetMapping("/{username}")
+    fun getByUsername(@PathVariable username: String): ResponseEntity<ApiResponse<UserProfileDto>> =
+        responses.ok(data = userService.getByUsername(username = username).toProfileDto())
 
     @DeleteMapping
     fun delete(@Valid @RequestBody body: DeleteUserRequestDto): ResponseEntity<ApiResponse<Nothing>> {

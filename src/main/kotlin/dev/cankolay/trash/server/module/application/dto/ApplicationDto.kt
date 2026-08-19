@@ -8,7 +8,7 @@ data class ApplicationDto(
     val name: String,
     val description: String,
 
-    val icon: String,
+    val icon: String?,
 
     val createdAt: Instant?
 )

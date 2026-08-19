@@ -1,5 +1,6 @@
 package dev.cankolay.trash.server.module.application.entity
 
+import dev.cankolay.trash.server.module.storage.entity.Object
 import dev.cankolay.trash.server.module.user.entity.User
 import jakarta.persistence.*
 import org.hibernate.annotations.CreationTimestamp
@@ -19,8 +20,9 @@ class Application(
     @Column(nullable = false, length = 500)
     val description: String,
 
-    @Column(nullable = false, length = 2048)
-    val icon: String,
+    @OneToOne(fetch = FetchType.EAGER, cascade = [CascadeType.ALL], orphanRemoval = true)
+    @JoinColumn(name = "icon_id")
+    var icon: Object? = null,
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)

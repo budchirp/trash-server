@@ -68,8 +68,10 @@ class SecurityConfig(
             it.requestMatchers(HttpMethod.POST, "/security/token", "/security/token/verify").authenticated()
 
             it.requestMatchers(HttpMethod.POST, "/application").hasAuthority(PermissionKeys.APPLICATION_CREATE)
+            it.requestMatchers(HttpMethod.POST, "/application/*/icon").hasAuthority(PermissionKeys.APPLICATION_UPDATE)
             it.requestMatchers(HttpMethod.GET, "/application/*", "/application/all")
                 .hasAuthority(PermissionKeys.APPLICATION_READ)
+            it.requestMatchers(HttpMethod.DELETE, "/application/*/icon").hasAuthority(PermissionKeys.APPLICATION_UPDATE)
             it.requestMatchers(HttpMethod.DELETE, "/application/*").hasAuthority(PermissionKeys.APPLICATION_DELETE)
 
             it.requestMatchers(HttpMethod.POST, "/connection/connect").hasAuthority(PermissionKeys.CONNECTION_CREATE)

@@ -1,5 +1,6 @@
 package dev.cankolay.trash.server.module.user.entity
 
+import dev.cankolay.trash.server.module.storage.entity.Object
 import jakarta.persistence.*
 
 @Entity
@@ -14,13 +15,16 @@ class Profile(
 
     @OneToOne(fetch = FetchType.EAGER, cascade = [CascadeType.ALL], orphanRemoval = true)
     @JoinColumn(name = "picture_id")
-    var picture: Picture? = null,
+    var picture: Object? = null,
 
     @Enumerated(EnumType.STRING)
     var gender: ProfileGender? = null,
 
     @Column(nullable = false)
     var `public`: Boolean = false,
+
+    @Column(nullable = false)
+    var dev: Boolean = false,
 )
 
 enum class ProfileGender(val value: String) {

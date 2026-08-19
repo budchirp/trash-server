@@ -1,4 +1,4 @@
-package dev.cankolay.trash.server.common.storage
+package dev.cankolay.trash.server.module.storage
 
 import java.net.URI
 import java.time.Instant

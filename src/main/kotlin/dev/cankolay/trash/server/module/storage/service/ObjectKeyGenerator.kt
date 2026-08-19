@@ -1,16 +1,16 @@
-package dev.cankolay.trash.server.module.user.service
+package dev.cankolay.trash.server.module.storage.service
 
 import org.springframework.stereotype.Component
 import java.util.*
 
 @Component
-class ProfilePictureKeyGenerator {
+class ObjectKeyGenerator {
 
-    fun generate(userId: String, contentType: String): String {
+    fun generate(prefix: String, contentType: String): String {
         val extension = extensionFor(contentType)
         val id = UUID.randomUUID().toString()
 
-        return "profiles/$userId/profile-picture/$id.$extension"
+        return "$prefix/$id.$extension"
     }
 
     fun extensionFor(contentType: String): String =

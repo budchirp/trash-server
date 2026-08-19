@@ -1,4 +1,4 @@
-package dev.cankolay.trash.server.common.storage.exception
+package dev.cankolay.trash.server.module.storage.exception
 
 import dev.cankolay.trash.server.common.exception.ApiException
 import org.springframework.http.HttpStatus

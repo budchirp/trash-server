@@ -10,9 +10,5 @@ data class CreateApplicationRequestDto(
 
     @field:NotBlank
     @field:Size(max = 500)
-    val description: String,
-
-    @field:NotBlank
-    @field:Size(max = 2048)
-    val icon: String
+    val description: String
 )

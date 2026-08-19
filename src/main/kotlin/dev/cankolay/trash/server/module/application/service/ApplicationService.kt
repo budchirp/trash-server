@@ -2,9 +2,11 @@ package dev.cankolay.trash.server.module.application.service
 
 import dev.cankolay.trash.server.module.application.entity.Application
 import dev.cankolay.trash.server.module.application.exception.ApplicationNotFoundException
+import dev.cankolay.trash.server.module.application.exception.DeveloperProgramRequiredException
 import dev.cankolay.trash.server.module.application.repository.ApplicationRepository
 import dev.cankolay.trash.server.module.auth.service.AuthService
 import dev.cankolay.trash.server.module.connection.repository.ConnectionRepository
+import dev.cankolay.trash.server.module.storage.service.ObjectService
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -12,18 +14,23 @@ import org.springframework.transaction.annotation.Transactional
 class ApplicationService(
     private val applicationRepository: ApplicationRepository,
     private val connectionRepository: ConnectionRepository,
-    private val auth: AuthService
+    private val auth: AuthService,
+    private val objectService: ObjectService
 ) {
     @Transactional
-    fun create(name: String, description: String, icon: String): Application {
+    fun create(name: String, description: String): Application {
         auth.validateSession()
+
+        val user = auth.user()
+        if (!user.profile.dev) {
+            throw DeveloperProgramRequiredException()
+        }
 
         return applicationRepository.save(
             Application(
                 name = name,
                 description = description,
-                icon = icon,
-                owner = auth.user()
+                owner = user
             )
         )
     }
@@ -50,6 +57,7 @@ class ApplicationService(
 
         val application = getOwned(id = id)
         connectionRepository.deleteAll(connectionRepository.findAllByApplicationId(applicationId = id))
+        objectService.delete(obj = application.icon)
         applicationRepository.delete(application)
     }
 }

@@ -8,6 +8,7 @@ import dev.cankolay.trash.server.module.auth.service.AuthService
 import dev.cankolay.trash.server.module.connection.repository.ConnectionRepository
 import dev.cankolay.trash.server.module.security.service.SecurityTokenService
 import dev.cankolay.trash.server.module.session.repository.SessionRepository
+import dev.cankolay.trash.server.module.storage.service.ObjectService
 import dev.cankolay.trash.server.module.user.entity.Profile
 import dev.cankolay.trash.server.module.user.entity.User
 import dev.cankolay.trash.server.module.user.exception.UserExistsException
@@ -27,7 +28,8 @@ class UserService(
     private val encryptor: Encryptor,
     private val securityTokenService: SecurityTokenService,
     private val rateLimiter: RateLimiter,
-    private val profilePictureService: ProfilePictureService
+    private val profilePictureService: ProfilePictureService,
+    private val objectService: ObjectService
 ) {
     @Transactional
     fun create(email: String, username: String, password: String, ip: String = "unknown"): User {
@@ -72,6 +74,7 @@ class UserService(
         sessionRepository.flush()
         connectionRepository.flush()
 
+        applicationRepository.findAllByOwnerId(ownerId = user.id).forEach { objectService.delete(obj = it.icon) }
         applicationRepository.deleteAllByOwnerId(ownerId = user.id)
 
         profilePictureService.delete()

@@ -15,7 +15,8 @@ class ProfileService(
     fun update(
         name: String? = null,
         gender: String? = null,
-        `public`: Boolean? = null
+        `public`: Boolean? = null,
+        dev: Boolean? = null
     ): Profile {
         val user = auth.user()
 
@@ -24,6 +25,7 @@ class ProfileService(
             ProfileGender.fromValue(value = it) ?: throw InvalidProfileGenderException()
         } ?: user.profile.gender
         user.profile.`public` = `public` ?: user.profile.`public`
+        user.profile.dev = dev ?: user.profile.dev
 
         return user.profile
     }

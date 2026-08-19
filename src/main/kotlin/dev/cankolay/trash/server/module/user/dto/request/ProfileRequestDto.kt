@@ -10,5 +10,7 @@ data class ProfileRequestDto(
     @field:Pattern(regexp = "male|female", flags = [Pattern.Flag.CASE_INSENSITIVE])
     val gender: String? = null,
 
-    val `public`: Boolean? = null
+    val `public`: Boolean? = null,
+
+    val dev: Boolean? = null
 )

@@ -1,9 +1,9 @@
-package dev.cankolay.trash.server.common.storage.s3
+package dev.cankolay.trash.server.module.storage.s3
 
-import dev.cankolay.trash.server.common.storage.ObjectStorage
-import dev.cankolay.trash.server.common.storage.ObjectUploadRequest
-import dev.cankolay.trash.server.common.storage.PresignedUpload
-import dev.cankolay.trash.server.common.storage.exception.ObjectStorageException
+import dev.cankolay.trash.server.module.storage.ObjectStorage
+import dev.cankolay.trash.server.module.storage.ObjectUploadRequest
+import dev.cankolay.trash.server.module.storage.PresignedUpload
+import dev.cankolay.trash.server.module.storage.exception.ObjectStorageException
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
 import software.amazon.awssdk.services.s3.S3Client

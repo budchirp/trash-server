@@ -4,5 +4,6 @@ data class ProfileDto(
     val name: String?,
     val picture: String?,
     val gender: String?,
-    val `public`: Boolean
+    val `public`: Boolean,
+    val dev: Boolean
 )

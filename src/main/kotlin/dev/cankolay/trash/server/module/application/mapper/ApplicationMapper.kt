@@ -7,6 +7,6 @@ fun Application.toDto() = ApplicationDto(
     id = id,
     name = name,
     description = description,
-    icon = icon,
+    icon = icon?.url,
     createdAt = createdAt
 )

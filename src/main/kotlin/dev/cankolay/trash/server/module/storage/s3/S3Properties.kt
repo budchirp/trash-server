@@ -1,4 +1,4 @@
-package dev.cankolay.trash.server.common.storage.s3
+package dev.cankolay.trash.server.module.storage.s3
 
 import org.springframework.boot.context.properties.ConfigurationProperties
 import java.net.URI

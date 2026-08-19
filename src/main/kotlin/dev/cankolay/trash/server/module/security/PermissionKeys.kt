@@ -13,6 +13,7 @@ object PermissionKeys {
 
     const val APPLICATION_READ = "application:read"
     const val APPLICATION_CREATE = "application:create"
+    const val APPLICATION_UPDATE = "application:update"
     const val APPLICATION_DELETE = "application:delete"
 
     const val CONNECTION_READ = "connection:read"
@@ -27,6 +28,7 @@ object PermissionKeys {
         SESSION_DELETE,
         APPLICATION_READ,
         APPLICATION_CREATE,
+        APPLICATION_UPDATE,
         APPLICATION_DELETE,
         CONNECTION_READ,
         CONNECTION_CREATE,

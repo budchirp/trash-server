@@ -7,5 +7,6 @@ fun Profile.toDto() = ProfileDto(
     name = name,
     picture = picture?.url,
     gender = gender?.value,
-    `public` = `public`
+    `public` = `public`,
+    dev = dev
 )
